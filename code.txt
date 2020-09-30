@@ -1,0 +1,125 @@
+recognition.onresult = function (event) {
+            var interim_transcript = '';
+            if (typeof (event.results) == 'undefined') {
+                recognition.onend = null;
+                recognition.stop();
+                $('.fa-microphone').hide();
+                $('#search').val('');
+                return;
+            }
+            for (var i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    final_transcript += event.results[i][0].transcript;
+                } else {
+                    interim_transcript += event.results[i][0].transcript;
+                }
+            }
+            final_transcript = capitalize(final_transcript);
+            var value = final_transcript || interim_transcript;
+            var $search = document.getElementById('search');
+            $search.value = value;
+            $search.scrollLeft = $search.scrollWidth;
+            let stateObj = { id: "100" };
+
+            
+            var mois = {"01": "janvier", "02": "février", "03": "mars", "04": "avril", "05": "mai", "06": "juin", '07': "juillet", '08': "août"
+                , '09': "septembre", '10': "octobre", '11': "novembre", '12': "décembre"};
+                
+            
+            var tab = value.split("du ");
+            var test = tab[1];
+
+            if(!test.includes("au"))
+            {
+
+            var tab2 = tab[1].split(" ");
+            console.log(tab2[1]);
+            console.log(tab2);
+            let stateObj = { id: "100" }; 
+            var moisP = "01";
+            var jourP = tab2[0];
+
+            
+                
+                
+                for(var index in mois) {
+                    
+                    if(mois[index] == tab2[1]){
+                        
+                        moisP = index;
+                    }
+                
+                }
+
+                if(jourP.length < 2 ){
+                    jourP = "0"+jourP;
+                }
+
+                if(jourP == "1er" ){
+                    jourP = "01";
+                }
+                
+                console.log(moisP+" "+jourP)
+
+
+            
+            setTimeout(() => { window.history.pushState(stateObj, 
+                     "Page 2", "/back-office/etats/caisse/search?days="+jourP+"-"+moisP+"-"+tab2[2]);
+                     location.reload() }, 2000);
+            }else{
+
+                var tab2 = tab[1].split("au ");
+            var tab3 = tab2[0].split(" ");
+            var tab4 = tab2[1].split(" ");
+            console.log(tab3);
+            console.log(" je suis la ");
+            console.log(tab4);
+            let stateObj = { id: "100" }; 
+            var moisP1 = "01";
+            var moisP = "01";
+
+            var jourP = tab3[0];
+            var jourP1 = tab4[0];
+
+            
+                
+                
+                for(var index in mois) {
+                    
+                    if(mois[index] == tab3[1]){
+                        
+                        moisP = index;
+                    }
+
+                    if(mois[index] == tab4[1]){
+                        
+                        moisP1 = index;
+                    }
+                
+                }
+
+                if(jourP.length < 2 ){
+                    jourP = "0"+jourP;
+                }
+
+                if(jourP1.length < 2 ){
+                    jourP1 = "0"+jourP1;
+                }
+
+                if(jourP == "1er" ){
+                    jourP = "01";
+                }
+
+                if(jourP1 == "1er" ){
+                    jourP1 = "01";
+                }
+                console.log(moisP1+" "+jourP1);
+
+
+            
+            setTimeout(() => { window.history.pushState(stateObj, 
+                     "Page 2", "/back-office/etats/caisse/search?from="+jourP+"-"+moisP+"-"+tab3[2]+"&to="+jourP1+"-"+moisP1+"-"+tab4[2]);
+                     location.reload() }, 2000);
+
+            }
+        };
